@@ -181,7 +181,7 @@ public class Path {
      * @return Number of nodes in this path.
      */
     public int size() {
-        return isEmpty() ? 0 : 1 + this.arcs.size();
+       return 0;
     }
 
     /**
@@ -201,14 +201,7 @@ public class Path {
      * @deprecated Need to be implemented.
      */
     public boolean isValid() {
-        if (!this.isEmpty()) {
-            return false;
-        }
-        if (this.getArcs().size() != 0) {
-            return false;
-        }
-        return true;
-        
+    	return true;
     }
 
     /**
@@ -216,13 +209,16 @@ public class Path {
      * 
      * @return Total length of the path (in meters).
      * 
-     * @deprecated Need to be implemented.
+     * 
      */
     public float getLength() {
-        List<Arc> list = new ArrayList<Arc>();
+    	List<Arc> list = new ArrayList<Arc>();
         list = getArcs();
-        System.out.println(list);
-        return 0;
+        float somme = 0;
+        for (Arc arc:list){
+        	somme = somme + arc.getLength();
+        }
+        return somme;
     }
 
     /**
@@ -236,7 +232,9 @@ public class Path {
      * @deprecated Need to be implemented.
      */
     public double getTravelTime(double speed) {
-        return ((this.getLength()/1000)/speed) * 3600;
+        float longueur = this.getLength();
+        double vitesse = speed;
+        return ((longueur /1000)/vitesse);
     }
 
     /**
