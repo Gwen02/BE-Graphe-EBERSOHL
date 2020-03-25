@@ -201,8 +201,14 @@ public class Path {
      * @deprecated Need to be implemented.
      */
     public boolean isValid() {
+        if (!this.isEmpty()) {
+            return false;
+        }
+        if (this.getArcs().size() != 0) {
+            return false;
+        }
+        return true;
         
-        return false;
     }
 
     /**
@@ -213,7 +219,9 @@ public class Path {
      * @deprecated Need to be implemented.
      */
     public float getLength() {
-        // TODO:
+        List<Arc> list = new ArrayList<Arc>();
+        list = getArcs();
+        System.out.println(list);
         return 0;
     }
 
@@ -228,8 +236,7 @@ public class Path {
      * @deprecated Need to be implemented.
      */
     public double getTravelTime(double speed) {
-        // TODO:
-        return 0;
+        return ((this.getLength()/1000)/speed) * 3600;
     }
 
     /**
