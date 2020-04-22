@@ -34,10 +34,34 @@ public class Path {
      */
     public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
-        List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
-        return new Path(graph, arcs);
-    }
+            List<Arc> arcs = new ArrayList<Arc>();
+            if(nodes.size() == 1) {
+            	return new Path(graph, nodes.get(0));
+            }
+            for (int i = 0; i<nodes.size()-1; i++) {
+            	Node node_act = nodes.get(i);
+            	if(node_act.hasSuccessors()) {
+            		List<Arc> arc_suiv = node_act.getSuccessors();
+            		double travel_time = 100000;
+            		int num = 0;
+            		boolean successor_found = false;
+            		for(int j = 0; j<arc_suiv.size(); j++) {
+            			if((arc_suiv.get(j).getDestination().compareTo(nodes.get(i+1)) == 0) && (arc_suiv.get(j).getMinimumTravelTime()) < travel_time) {
+            				num = j;
+            				travel_time = arc_suiv.get(num).getMinimumTravelTime();
+            				successor_found = true;
+            			}
+            		}
+            		if(successor_found == false) {
+            			throw new IllegalArgumentException();
+            		}
+            		arcs.add(arc_suiv.get(num));
+            	}else {
+            		throw new IllegalArgumentException();
+            	}
+            }
+            return new Path(graph, arcs);
+        }
 
     /**
      * Create a new path that goes through the given list of nodes (in order),
@@ -51,12 +75,35 @@ public class Path {
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
      * 
-     * @deprecated Need to be implemented.
      */
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
+        if(nodes.size() == 1) {
+        	return new Path(graph, nodes.get(0));
+        }
+        for (int i = 0; i<nodes.size()-1; i++) {
+        	Node node_act = nodes.get(i);
+        	if(node_act.hasSuccessors()) {
+        		List<Arc> arc_suiv = node_act.getSuccessors();
+        		double length = 100000;
+        		int num = 0;
+        		boolean successor_found = false;
+        		for(int j = 0; j<arc_suiv.size(); j++) {
+        			if((arc_suiv.get(j).getDestination().compareTo(nodes.get(i+1)) == 0) && (arc_suiv.get(j).getLength() < length)) {
+        				num = j;
+        				length = arc_suiv.get(num).getLength();
+        				successor_found = true;
+        			}
+        		}
+        		if(successor_found == false) {
+        			throw new IllegalArgumentException();
+        		}
+        		arcs.add(arc_suiv.get(num));
+        	}else {
+        		throw new IllegalArgumentException();
+        	}
+        }
         return new Path(graph, arcs);
     }
 
@@ -198,7 +245,7 @@ public class Path {
      * 
      * @return true if the path is valid, false otherwise.
      * 
-     * @deprecated Need to be implemented.
+
      */
     public boolean isValid() {
     	if(this.isEmpty()) {
@@ -207,7 +254,15 @@ public class Path {
     	else if(this.size() == 0) {
     		return true;
     	}
-    	else(aaaa)
+    	else {
+    		Node origine = this.getOrigin();
+    		for (Arc arc : this.arcs) {
+    			if (origine != arc.getOrigin()) {
+    				return false;
+    			}
+    			origine = arc.getDestination();
+    		}
+    	}
     	return true;
     }
 
