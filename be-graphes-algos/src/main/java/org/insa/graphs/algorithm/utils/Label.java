@@ -1,37 +1,73 @@
 package org.insa.graphs.algorithm.utils;
 
+import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Node;
 
-public class Label{
-	private int cost; 
-	private boolean mark; 
-	private Node father;
-	private Node sommet; 
+public class Label  implements Comparable<Label> {
+	private Node sommet_courant;
+	private boolean marque;
+	private double cout;
+	private Arc pere;
 	
-	public Label(Node somm) {
-		this.mark = false; 
-		this.father = null; 
-		this.sommet = somm;
-		this.cost = 1_000_000_000; 
+	public Label(Node sommet_courant) {
+		this.sommet_courant = sommet_courant;
+		marque = false;
+		cout = Double.POSITIVE_INFINITY;
+		pere = null;
 	}
 	
-	public Node getSom() {
-		return this.sommet;
+	public double getCost() {
+		return cout;
 	}
 	
-	public int getCost() {
-		return this.cost;
+	public double getTotalCost() {
+		return this.getCost();
 	}
 	
-	public boolean getMark() {
-		return this.mark;
+	public Node getNode() {
+		return sommet_courant;
 	}
 	
-	public void setMark() {
-		this.mark = true;
+	public Arc getFather() {
+		return pere;
 	}
 	
-	public Node getFather() {
-		return this.father;
+	public boolean isMarked() {
+		return marque;
+	}
+	
+	public void setFather(Arc pere) {
+		
+		this.pere = pere;
+	}
+	
+	public void mark() {
+		marque = true;
+	}
+	
+	public void setCost(double cout) {
+		this.cout = cout;
+	}
+	
+	@Override public int compareTo(Label other) {
+		if (this.getTotalCost() < other.getTotalCost()) {
+			return -1;
+		}
+		else if (this.getTotalCost() == other.getTotalCost()) {
+			if (this.getCost() < other.getCost()) {
+				return -1;
+			}
+			else if (this.getCost() > other.getCost()) {
+				return 1;
+			}
+			else {
+				return 0;
+			}
+		}
+		else {
+			return 1;
+		}
 	}
 }
+
+
