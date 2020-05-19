@@ -83,7 +83,7 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
 
         this.arraySet(index, x);
     }
-
+    
     /**
      * Internal method to percolate down in the heap.
      * 
@@ -134,28 +134,53 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
         this.arraySet(index, x);
         this.percolateUp(index);
     }
-
+    
     @Override
     public void remove(E x) throws ElementNotFoundException {
-        int index; 
-        int lastIndex;
-        E lastItem; 
-        if (this.isEmpty()) {
-        	throw new ElementNotFoundException(x);
-        }
-        else {
-        	index = this.array.indexOf(x);
-        	if (index == -1 || index >= this.currentSize) {
-        		throw new ElementNotFoundException(x);
-        	}
-        	else {
-        		lastIndex = --this.currentSize;
-        		lastItem = this.array.get(lastIndex);
-        		this.array.set(index, lastItem);
-        		this.percolateDown(index);
-        		this.percolateUp(index);
-        	}
-        }
+    	//Si le tas est vide, il est inutile de chercher l'élément, on vérifie donc que le tas n'est pas vide
+    	if (!this.isEmpty()) {
+    		//Si le premier élément du tableau est celui qu'on veut supprimer
+    		//il suffit de réutiliser la méthode deleteMin
+	    	if (x == this.findMin()) {
+	    		this.deleteMin();
+	    	}
+	    	//Si l'élément que l'on veut supprimer est le dernier du tas, on n'a qu'à
+	    	//décrémenter currentSize pour l'ignorer
+	    	else if (this.array.get(this.size() - 1) == x){
+	    		currentSize--;
+	    	}
+	    	//Si l'élément n'est pas aux extrémités
+	    	else {
+	    		//On cherche dans un premier temps le rang de l'élément en parcourant le tableau
+		        int ElemIndex = 0;
+		        boolean trouve = false;
+		        while (ElemIndex < this.size() && !trouve) {
+		        	if (this.array.get(ElemIndex) == x) {
+		        		trouve = true;
+		        	}
+		        	else {
+		        		ElemIndex++;
+		        	}
+		        }
+		        //Si, en sortant de la boucle while, on n'a pas trouvé l'élément, on renvoie une exception
+		        if (!trouve) {
+		        	throw new ElementNotFoundException(x);
+		        }
+		        else {
+		        	//si l'élément a été trouvé, on l'échange avec le dernier élément...
+			        E temp = this.array.get(this.size() - 1);
+			        this.arraySet(this.size() - 1, this.array.get(ElemIndex));
+			        this.arraySet(ElemIndex, temp);
+			        this.currentSize--; //Element supprimé => taille qui baisse
+			        //Puis on replace le tas dans un ordre correct
+			        this.percolateUp(ElemIndex);
+			        this.percolateDown(ElemIndex);
+		        }
+	    	}
+    	}
+    	else {
+    		throw new ElementNotFoundException(x);
+    	}
     }
 
     @Override
@@ -219,25 +244,24 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     public String toString() {
         return BinaryHeapFormatter.toStringTree(this, 8);
     }
-
+    
     public boolean isValid() {
-    	boolean valide = true;
-    	for (int i = 0; i < this.currentSize && valide; i++) {
+    	boolean valid = true;
+    	for (int i = 0; i < this.currentSize && valid; i++) {
     		if (this.indexLeft(i) <= this.currentSize) {
     			if (this.array.get(this.indexLeft(i)).compareTo(this.array.get(i)) == -1) {
-    				valide = false;
+    				valid = false;
     			}
     			else {
     				if (this.indexLeft(i) + 1 < this.currentSize) {
     					if (this.array.get(this.indexLeft(i) + 1).compareTo(this.array.get(i)) == -1) {
-    	    				valide = false;
+    	    				valid = false;
     	    			}
     				}
     			}
     		}
     	}
-    	return valide;
+    	return valid;
     }
 
-}   
-    
+}
