@@ -74,9 +74,7 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     private void percolateUp(int index) {
         E x = this.array.get(index);
 
-        for (; index > 0
-                && x.compareTo(this.array.get(indexParent(index))) < 0; index = indexParent(
-                        index)) {
+        for (; index > 0 && x.compareTo(this.array.get(indexParent(index))) < 0; index = indexParent(index)) {
             E moving_val = this.array.get(indexParent(index));
             this.arraySet(index, moving_val);
         }
@@ -139,19 +137,15 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     public void remove(E x) throws ElementNotFoundException {
     	//Si le tas est vide, il est inutile de chercher l'élément, on vérifie donc que le tas n'est pas vide
     	if (!this.isEmpty()) {
-    		//Si le premier élément du tableau est celui qu'on veut supprimer
-    		//il suffit de réutiliser la méthode deleteMin
+    		//Si le premier élément du tableau est celui qu'on veut supprimer il suffit de réutiliser la méthode deleteMin
 	    	if (x == this.findMin()) {
 	    		this.deleteMin();
 	    	}
-	    	//Si l'élément que l'on veut supprimer est le dernier du tas, on n'a qu'à
-	    	//décrémenter currentSize pour l'ignorer
+	    	//Si l'élément que l'on veut supprimer est le dernier du tas, on n'a qu'à décrémenter currentSize pour l'ignorer
 	    	else if (this.array.get(this.size() - 1) == x){
 	    		currentSize--;
 	    	}
-	    	//Si l'élément n'est pas aux extrémités
 	    	else {
-	    		//On cherche dans un premier temps le rang de l'élément en parcourant le tableau
 		        int ElemIndex = 0;
 		        boolean trouve = false;
 		        while (ElemIndex < this.size() && !trouve) {

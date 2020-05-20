@@ -4,10 +4,10 @@ import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Node;
 
 public class Label  implements Comparable<Label> {
-	private Node sommet_courant;
-	private boolean marque;
-	private double cout;
-	private Arc pere;
+	protected Node sommet_courant;
+	protected boolean marque;
+	protected double cout;
+	protected Arc pere;
 	
 	public Label(Node sommet_courant) {
 		this.sommet_courant = sommet_courant;

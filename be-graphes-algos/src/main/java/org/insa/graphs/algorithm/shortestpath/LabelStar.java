@@ -1,21 +1,31 @@
 package org.insa.graphs.algorithm.shortestpath;
-
-import org.insa.graphs.model.Arc;
+import org.insa.graphs.algorithm.AbstractInputData;
 import org.insa.graphs.model.Node;
 
-public class LabelStar extends Label{
+public class LabelStar extends Label {
 	
-	private double cout_estime;
+	private Node node_dest;
 	
-	public double getCoutEstime() {
-		return this.cout_estime;
-		
+	private ShortestPathData data;
+	
+	public LabelStar(Node sommet_courant, Node node_dest, ShortestPathData data) {
+		super(sommet_courant);
+		this.node_dest = node_dest;
+		this.data = data;
 	}
+	
+	public LabelStar(Node sommet_courant) {
+		super(sommet_courant);
+	}
+	
 	
 	public double getTotalCost() {
-		return this.getCost() + this.getCoutEstime();
+		if (data.getMode() == AbstractInputData.Mode.LENGTH) {
+			return this.getCost() + this.getNode().getPoint().distanceTo(this.node_dest.getPoint()); //Cas où on cherche le chemin le plue court
+		}
+		else { //Cas où on cherche le chemin le plus rapide
+			return this.getCost() + this.getNode().getPoint().distanceTo(this.node_dest.getPoint())/(this.data.getGraph().getGraphInformation().getMaximumSpeed()/3.6);
+		}
 	}
-	
 }
-
 
