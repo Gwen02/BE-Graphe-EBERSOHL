@@ -18,10 +18,10 @@ public class LabelStar extends Label {
 		super(sommet_courant);
 	}
 	
-	
-	public double getTotalCost() {
+	@Override
+	public double getTotalCost() {  //Cas où on cherche le chemin le plus court
 		if (data.getMode() == AbstractInputData.Mode.LENGTH) {
-			return this.getCost() + this.getNode().getPoint().distanceTo(this.node_dest.getPoint()); //Cas où on cherche le chemin le plue court
+			return this.getCost() + this.getNode().getPoint().distanceTo(this.node_dest.getPoint());
 		}
 		else { //Cas où on cherche le chemin le plus rapide
 			return this.getCost() + this.getNode().getPoint().distanceTo(this.node_dest.getPoint())/(this.data.getGraph().getGraphInformation().getMaximumSpeed()/3.6);

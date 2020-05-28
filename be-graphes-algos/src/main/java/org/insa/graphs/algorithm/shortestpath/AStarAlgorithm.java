@@ -27,26 +27,26 @@ public class AStarAlgorithm extends ShortestPathAlgorithm {
         final int nbNodes = graph.size();
         
         //On récupère l'index du node origine du chemin à déterminer
-        int index_origine = data.getOrigin().getId();
+        int index_depart = data.getOrigin().getId();
         //On récupère l'index du node destination
-        int index_dest = data.getDestination().getId();
+        int index_end = data.getDestination().getId();
         
         notifyOriginProcessed(data.getOrigin());
 
         BinaryHeap<Label> tas = new BinaryHeap<Label>();
         ArrayList<LabelStar> labels = new ArrayList<LabelStar>();
-        //On initialise tous les labels à +infini, avec marque à false et pere à NULL
+        //On initialise tous les labels à +infini, avec marque à false et pere à NULL (marque false et père null viennent du Label)
         for (int i = 0; i < nbNodes; i++) {
-        	labels.add(new LabelStar(nodes.get(i)));
+        	labels.add(new LabelStar(nodes.get(i), graph.get(index_end), data));
         }
-        //On actualise le cout du label correspondant au node d'origine
-        labels.get(index_origine).setCost(0);
-        //On insère le label actualisé dans le tas
-        tas.insert(labels.get(index_origine));
+        //On set le coût du point de départ à 0
+        labels.get(index_depart).setCost(0);
+        //On insère dans le tas le point d'origine
+        tas.insert(labels.get(index_depart));
 
         int nbIterations = 0;
-        
-        while (!labels.get(index_dest).isMarked() && tas.size() != 0) {
+        double temps1 = System.currentTimeMillis();
+        while (!labels.get(index_end).isMarked() && tas.size() != 0) {
         	//On récupère le label minimal dans le tas
         	Label label_min = tas.deleteMin();
         	//On marque le label minimal
@@ -56,11 +56,11 @@ public class AStarAlgorithm extends ShortestPathAlgorithm {
         	
         	
         	//Vérification du coût croissant des labels marqués
-        	System.out.println("Coût du label marqué : " + label_min.getCost());
+        	//System.out.println("Coût du label marqué : " + label_min.getCost());
         	//Vérification de la taille du tas
-        	System.out.println("Taille du tas : " + tas.size());
+        	//System.out.println("Taille du tas : " + tas.size());
         	//Vérification du nombre de successeurs
-        	System.out.println("Nb successeurs du label : " + arcs.size());
+        	//System.out.println("Nb successeurs du label : " + arcs.size());
         	
         	nbIterations++;
         	
@@ -97,7 +97,7 @@ public class AStarAlgorithm extends ShortestPathAlgorithm {
         ShortestPathSolution solution = null;
         
         //La destination n'a pas de prédécesseur, le chemin est infaisable
-        if (!labels.get(index_dest).isMarked()) {
+        if (!labels.get(index_end).isMarked()) {
             solution = new ShortestPathSolution(data, Status.INFEASIBLE);
         }
         else {
@@ -106,7 +106,7 @@ public class AStarAlgorithm extends ShortestPathAlgorithm {
 
             //On crée un nouveau chemin à partir des prédécesseurs
             ArrayList<Arc> chemin = new ArrayList<>();
-            Arc arc = labels.get(index_dest).getFather();
+            Arc arc = labels.get(index_end).getFather();
             while (arc != null) {
                 chemin.add(arc);
                 arc = labels.get(arc.getOrigin().getId()).getFather();
@@ -121,8 +121,9 @@ public class AStarAlgorithm extends ShortestPathAlgorithm {
 
             //On crée la solution finale
             solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, chemin));
-            
-            //Debogage
+            double temps2 = System.currentTimeMillis();
+            double temps_final = (temps2 - temps1) / 1000;
+            //Affichage console
             if (!solution.getPath().isValid()) {
             	System.out.println("Chemin trouvé non valide.");
             }
@@ -130,10 +131,12 @@ public class AStarAlgorithm extends ShortestPathAlgorithm {
             	System.out.println("Chemin trouvé valide.");
             }
             if (data.getMode() == AbstractInputData.Mode.TIME) {
-            	System.out.println("Durée chemin Path : " + solution.getPath().getMinimumTravelTime() + ", Dijkstra : " + labels.get(index_dest).getCost());
+            	System.out.println("Durée chemin Path : " + solution.getPath().getMinimumTravelTime() + ", A* : " + labels.get(index_end).getCost());
+            	System.out.println("L'algorithme a mit : " + temps_final+ "s à s'éxécuter");
             }
             else {
-            	System.out.println("Longueur chemin Path : " + solution.getPath().getLength() + ", Dijkstra : " + labels.get(index_dest).getCost());
+            	System.out.println("Longueur chemin Path : " + solution.getPath().getLength() + ", A* : " + labels.get(index_end).getCost());
+            	System.out.println("L'algorithme a mit : " + temps_final+ "s à s'éxécuter");
             }
             
         }

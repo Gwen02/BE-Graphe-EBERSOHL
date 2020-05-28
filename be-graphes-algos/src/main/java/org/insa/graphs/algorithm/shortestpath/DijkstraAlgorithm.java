@@ -45,22 +45,21 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         tas.insert(labels.get(index_origine));
 
         int nbIterations = 0;
-        
+        double temps1 = System.currentTimeMillis();
         while (!labels.get(index_dest).isMarked() && tas.size() != 0) {
         	//On récupère le label minimal dans le tas
         	Label label_min = tas.deleteMin();
         	//On marque le label minimal
         	labels.get(label_min.getNode().getId()).mark();
-        	//On récupère les arcs successeurs du label minimal
-        	List<Arc> arcs = label_min.getNode().getSuccessors();
+        	List<Arc> arcs = label_min.getNode().getSuccessors();       	//On récupère les arcs successeurs du label minimal
         	
         	
         	//Vérification du coût croissant des labels marqués
-        	System.out.println("Coût du label marqué : " + label_min.getCost());
+        	//System.out.println("Coût du label marqué : " + label_min.getCost());
         	//Vérification de la taille du tas
-        	System.out.println("Taille du tas : " + tas.size());
+        	//System.out.println("Taille du tas : " + tas.size());
         	//Vérification du nombre de successeurs
-        	System.out.println("Nb successeurs du label : " + arcs.size());
+        	//System.out.println("Nb successeurs du label : " + arcs.size());
         	
         	nbIterations++;
         	
@@ -77,7 +76,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         			double oldDistance = labels.get(index_suiv).getCost();
         			double newDistance = label_min.getCost() + data.getCost(arcs.get(i));
         			
-        			//Coloration des chemins au fur et à mesure
+        			//Permet de colorier les chemins au fur et à mesure de l'avancée du programme
         			if (Double.isInfinite(oldDistance) && Double.isFinite(newDistance)) {
                         notifyNodeReached(arcs.get(i).getDestination());
                     }
@@ -102,7 +101,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         }
         else {
 
-            notifyDestinationReached(data.getDestination());
+            notifyDestinationReached(data.getDestination()); //Destination trouvée
 
             //On crée un nouveau chemin à partir des prédécesseurs
             ArrayList<Arc> chemin = new ArrayList<>();
@@ -121,7 +120,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
             //On crée la solution finale
             solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, chemin));
-            
+            double temps2 = System.currentTimeMillis();
+    		double temps_final = (temps2 - temps1) / 1000;
             //Debogage
             if (!solution.getPath().isValid()) {
             	System.out.println("Chemin trouvé non valide.");
@@ -131,9 +131,11 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             }
             if (data.getMode() == AbstractInputData.Mode.TIME) {
             	System.out.println("Durée chemin Path : " + solution.getPath().getMinimumTravelTime() + ", Dijkstra : " + labels.get(index_dest).getCost());
+            	System.out.println("L'algorithme a mit : " + temps_final+ "s à s'éxécuter");
             }
             else {
             	System.out.println("Longueur chemin Path : " + solution.getPath().getLength() + ", Dijkstra : " + labels.get(index_dest).getCost());
+            	System.out.println("L'algorithme a mit : " + temps_final+ "s à s'éxécuter");
             }
             
         }
