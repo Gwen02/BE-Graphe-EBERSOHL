@@ -55,11 +55,11 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	
         	
         	//Vérification du coût croissant des labels marqués
-        	//System.out.println("Coût du label marqué : " + label_min.getCost());
+        	System.out.println("Coût du label marqué : " + label_min.getCost());
         	//Vérification de la taille du tas
-        	//System.out.println("Taille du tas : " + tas.size());
+        	System.out.println("Taille du tas : " + tas.size());
         	//Vérification du nombre de successeurs
-        	//System.out.println("Nb successeurs du label : " + arcs.size());
+        	System.out.println("Nb successeurs du label : " + arcs.size());
         	
         	nbIterations++;
         	
